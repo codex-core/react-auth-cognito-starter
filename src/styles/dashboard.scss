@@ -1,0 +1,65 @@
+@import "./variables.scss";
+
+.page-header-left,
+.page-header {
+  align-items: center;
+  display: flex;
+  .row {
+    h3 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 0;
+      text-transform: uppercase;
+      small {
+        color: #777;
+        display: block;
+        font-size: 12px;
+        letter-spacing: 1px;
+        margin-top: 7px;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+
+.pull-right {
+  float: right;
+}
+
+.breadcrumb {
+  background-color: $transparent-color;
+  padding: 0;
+  margin-bottom: 0;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  .breadcrumb-item {
+    & + .breadcrumb-item {
+      &:before {
+        content: $breadcrumb-content;
+      }
+    }
+    a {
+      svg {
+        width: $breadcrumb-size;
+        height: $breadcrumb-size;
+        vertical-align: $breadcrumb-svg-icon-align;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .page-wrapper
+    .page-body-wrapper
+    .page-sidebar
+    ~ .page-body
+    .page-header
+    .row
+    .page-header-left {
+    display: inherit;
+  }
+}

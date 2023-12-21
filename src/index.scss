@@ -1,0 +1,117 @@
+@import "./styles/animation.scss";
+@import "./styles/login.scss";
+@import "./styles/dashboard.scss";
+@import "./styles/mui-overrides.scss";
+
+body {
+  background-color: hsla(0,0%,96%,.6);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.authentication-box .container {
+  max-width: 900px;
+}
+
+.small-logo {
+  max-width: 60px;
+}
+
+.container,
+.container-fluid,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl,
+.container-xxl {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.p10 {
+  padding: 10px;
+}
+
+.p30 {
+  padding: 30px;
+}
+
+.button-default-w {
+  min-width: 250px !important;
+}
+.bg-primary {
+  padding: 50px;
+  background-color: #fdfdfd;
+  background-position: center;
+  box-shadow: 1px 5px 24px 0 rgba(255, 128, 132, 0.8);
+  .black {
+    background-color: #4a4a4a;
+  }
+}
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  margin-bottom: 1rem;
+}
+.svg-icon {
+  padding: 24px;
+  margin: 0 auto;
+  border: 2px dashed #ffffff;
+  border-radius: 100%;
+  height: 130px;
+  width: 130px;
+  margin-bottom: 40px;
+  img {
+    width: 100%;
+  }
+}
+p {
+  font-size: 15px;
+  line-height: 2;
+  text-align: center;
+}
+
+h3 {
+  font-weight: 600;
+  text-align: center;
+}
+// LOGIN STUFF
+.card-left {
+  z-index: 1;
+}
+
+@media only screen and (max-width: 991px) {
+  .authentication-box.container {
+    padding: 30px;
+    .container {
+      .bg-primary {
+        padding: 40px;
+      }
+    }
+  }
+}
+
+@media (min-width: 576px){
+  .container, .container-sm {
+    max-width: 1100px;
+}
+}
+
