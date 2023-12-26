@@ -23,7 +23,7 @@ function SignInGoogle() {
       "https://codex-auth.auth.us-east-1.amazoncognito.com/oauth2/authorize?";
     const clientId = cognitoClientId;
     const scope = "aws.cognito.signin.user.admin+email+openid+phone+profile";
-    const redirectUri = "http://localhost:4000";
+    const redirectUri = encodeURI(`${window.location.protocol}//${window.location.host}/auth/oidc`);
     return (
       base +
       `client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUri}&response_type=code`

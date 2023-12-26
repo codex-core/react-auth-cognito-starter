@@ -3,3 +3,7 @@
 .env*
 .DS_Store
 */.DS_Store
+build
+
+dist/
+node_modules/

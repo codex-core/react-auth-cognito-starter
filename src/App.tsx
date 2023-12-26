@@ -17,6 +17,7 @@ import ForgotPassword from "./pages/auth/forgot-password";
 import ConfirmPassword from "./pages/auth/confirm-password";
 import Settings from "./pages/dashboard/settings";
 import Account from "./pages/dashboard/account";
+import GoogleValidation from "./pages/auth/google";
 
 const ProtectedRoute = ({
   token,
@@ -44,6 +45,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/account" element={<Account />} />
           </Route>
+          <Route path="/auth/oidc" element={<GoogleValidation />} />
           <Route path="/set-new-password" element={<SetNewPassword/>}/>
           <Route path="/reset-form" element={<ForgotPassword/>}/>
           <Route path="/confirm-password" element={<ConfirmPassword/>}/>
