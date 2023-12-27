@@ -9,10 +9,12 @@
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "allowUnusedLabels": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,

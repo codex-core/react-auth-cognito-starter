@@ -2,13 +2,13 @@ import {
   TextField,
   Typography,
   CircularProgress as Spinner,
+  Button,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import QRCode from "react-qr-code";
-import { Button } from "reactstrap";
 import { CognitoUserSession } from "amazon-cognito-identity-js";
 
 const MFASetupForm = ({ secretCode = "" }: { secretCode: any }) => {
@@ -51,12 +51,15 @@ const MFASetupForm = ({ secretCode = "" }: { secretCode: any }) => {
       <TextField
         type="text"
         name="otp"
+        size="small"
         placeholder="Enter OTP"
         onChange={(e) => setMfaCode(e.target.value)}
       />
-      <Button variant="outlined" color="primary" onClick={submitOTP}>
+      <br/>
+      <Button variant="contained" color="primary" onClick={submitOTP}>
         {isLoading ? <Spinner /> : "Submit"}
       </Button>
+      <br/>
     </div>
   );
 };

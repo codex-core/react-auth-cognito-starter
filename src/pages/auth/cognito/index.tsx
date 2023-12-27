@@ -4,7 +4,6 @@ import {
   CognitoUser,
 } from "amazon-cognito-identity-js";
 import axios from "axios";
-import { redirect } from "react-router-dom";
 
 console.log(process.env.REACT_APP_COGNITO_USER_POOL_ID);
 
@@ -15,12 +14,6 @@ const poolData = {
 
 export const exchangeCode = async (code: string) => {
   const redirectUri = `${window.location.origin}/auth/confirm`;
-  const params = {
-    grant_type: 'authorization_code',
-    client_id: process.env.REACT_APP_COGNITO_CLIENT_ID,
-    redirect_uri: redirectUri,
-    code: code
-  };
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'

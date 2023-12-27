@@ -1,11 +1,10 @@
 import { Link, TextField, Typography, Button,
   CircularProgress as Spinner,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Centered from "../../../common/centered";
 import { CognitoUserSession } from "amazon-cognito-identity-js";
 
 const OTPForm = () => {

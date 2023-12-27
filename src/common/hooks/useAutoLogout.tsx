@@ -28,7 +28,7 @@ const useAutoLogout = (logoutFunction: ()=> void) => {
       window.removeEventListener('keydown', resetTimer);
       window.removeEventListener('scroll', resetTimer);
     };
-  }, [logoutFunction]);
+  }, );
 };
 
 export default useAutoLogout;

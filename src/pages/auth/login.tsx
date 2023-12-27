@@ -1,49 +1,21 @@
 import React, { Fragment, useContext } from "react";
 import LoginTabset from "./components/loginTabset";
-import Slider from "react-slick";
 // import stats from "public/images/swank-vendors-white.png";
-import { Box, Card, Paper, Slide, Typography, Zoom } from "@mui/material";
+import { Box, Card, Paper, Typography, Zoom } from "@mui/material";
 import Centered from "../../common/centered";
 import Row from "../../common/components/Row";
 import Col from "../../common/components/Col";
 import CognitoAuthContext from "../../common/context/cognitoAuthContext";
-import { Navigate } from "react-router-dom";
 import MFASetupForm from "./components/mfa-setup-form";
 import OTPForm from "./components/otpForm";
-const stats = "";
+import ConfirmAccount from "./components/confirmAccount";
 const Login = () => {
   const containerRef = React.useRef<HTMLElement>(null);
   const {
-    currentUser: user,
-    sessionToken: token,
-    displayQRCode,
     QRCodeSecret,
-    loginStep,
+    authStep,
   } = useContext(CognitoAuthContext);
-  // if (token) {
-  //   return <Navigate to="/dashboard" replace />;
-  // }
-  var settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    arrows: false,
-  };
-  const icon = (
-    <Paper sx={{ m: 1, width: 100, height: 100 }} elevation={4}>
-      <svg>
-        <Box
-          component="polygon"
-          points="0,100 50,00, 100,100"
-          sx={{
-            fill: (theme) => theme.palette.common.white,
-            stroke: (theme) => theme.palette.divider,
-            strokeWidth: 1,
-          }}
-        />
-      </svg>
-    </Paper>
-  );
+
   return (
     <Fragment>
       <div className="page-wrapper">
@@ -67,9 +39,9 @@ const Login = () => {
                   <Zoom
                     mountOnEnter
                     unmountOnExit
-                    in={loginStep === "login"}
+                    in={authStep === "login"}
                     style={{
-                      transitionDelay: loginStep === "login" ? "500ms" : "0ms",
+                      transitionDelay: authStep === "login" ? "500ms" : "0ms",
                     }}
                   >
                     {LoginTabset()}
@@ -78,10 +50,23 @@ const Login = () => {
                     <Zoom
                       mountOnEnter
                       unmountOnExit
-                      in={loginStep === "setupMFA"}
+                      in={authStep === "confirmAccount"}
                       style={{
                         transitionDelay:
-                          loginStep === "setupMFA" ? "500ms" : "0ms",
+                          authStep === "setupMFA" ? "500ms" : "0ms",
+                      }}
+                    >
+                      {ConfirmAccount()}
+                    </Zoom>
+                  </Box>
+                  <Box>
+                    <Zoom
+                      mountOnEnter
+                      unmountOnExit
+                      in={authStep === "setupMFA"}
+                      style={{
+                        transitionDelay:
+                          authStep === "setupMFA" ? "500ms" : "0ms",
                       }}
                     >
                       {MFASetupForm({ secretCode: QRCodeSecret })}
@@ -91,10 +76,10 @@ const Login = () => {
                     <Zoom
                       mountOnEnter
                       unmountOnExit
-                      in={loginStep === "enterOTP"}
+                      in={authStep === "enterOTP"}
                       style={{
                         transitionDelay:
-                          loginStep === "enterOTP" ? "500ms" : "0ms",
+                          authStep === "enterOTP" ? "500ms" : "0ms",
                       }}
                     >
                       {OTPForm()}

@@ -31,20 +31,5 @@ export default function useSessionStorage(key: string, initialValue: any): [any,
         console.log(error);
       }
     };
-
-    const removeValue = (key:string) => {
-        try {
-            // Allow value to be a function so we have same API as useState
-            // const valueToStore =
-            //   value instanceof Function ? value(storedValue) : value;
-            // // Save state
-            setStoredValue(null);
-            // Save to local storage
-            removeData(key);
-          } catch (error) {
-            // A more advanced implementation would handle the error case
-            console.log(error);
-          }
-    }
     return [storedValue, setValue, removeData];
   }

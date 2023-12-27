@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import logo from "./logo.svg";
+import { useContext } from "react";
 import "./App.css";
 import Login from "./pages/auth/login";
 import CognitoAuthContext from "./common/context/cognitoAuthContext";
@@ -10,7 +9,6 @@ import {
   Navigate,
   Outlet,
 } from "react-router-dom";
-import { CognitoUser } from "amazon-cognito-identity-js";
 import Dashboard from "./pages/dashboard";
 import SetNewPassword from "./pages/auth/set-new-password";
 import ForgotPassword from "./pages/auth/forgot-password";
@@ -33,7 +31,7 @@ const ProtectedRoute = ({
 };
 
 function App() {
-  const { currentUser:user, sessionToken: token } = useContext(CognitoAuthContext);
+  const { sessionToken: token } = useContext(CognitoAuthContext);
 
   return (
     <div className="App">

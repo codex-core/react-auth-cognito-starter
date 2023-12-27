@@ -1,14 +1,13 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Unlock, User } from "react-feather";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import { Button, Form, FormGroup, Input, Label, Spinner } from "reactstrap";
 // import * as AuthService from "../../services/api/accounts";
-import { setToken, setUser, setAuthContext } from "../../../services/store";
+import { setAuthContext } from "../../../services/store";
 import {
   Tab,
   Button,
   FormGroup,
-  Input,
   Typography as Label,
   CircularProgress as Spinner,
   TextField,
@@ -28,7 +27,7 @@ import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
 import SignInGoogle from "./signInWithGoogle";
 const LoginTabset = () => {
   const [value, setValue] = React.useState("0");
-  const { authenticate } = useContext(CognitoAuthContext);
+  const { authenticate, createUserAccount } = useContext(CognitoAuthContext);
   const navigate = useNavigate();
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -56,18 +55,36 @@ const LoginTabset = () => {
     return () => {};
   }, []);
 
-  const clickActive = (event: {
-    target: { classList: { add: (arg0: string) => void } };
-  }) => {
-    document.querySelector(".nav-link")?.classList.remove("show");
-    event.target.classList.add("show");
-  };
   const closeTerms = () => {
     setOpenTerms(false);
   };
   const openTerms = () => {
     setOpenTerms(true);
   };
+  const authenticateUser = (Username: string, Password: string) => {
+    authenticate(authInfo.username, authInfo.password)
+      .then((authResult) => {
+        setisloading(false);
+        console.log(authResult);
+        if (authResult && authResult.userAttributes) {
+          setAuthContext("0");
+          toast.success("Login successful");
+          navigate("/set-new-password");
+        } else {
+          navigate("/dashboard");
+        }
+      })
+      .catch((err: any) => {
+        if(err.__type && err.__type === "UserNotConfirmedException"){
+          navigate("/confirm-account");
+          return
+        }
+        toast.error("Login failed, check your username or password");
+        console.log(err);
+        setisloading(false);
+      });
+  };
+
   const register = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const keys = Object.keys(registerInfo);
@@ -98,28 +115,23 @@ const LoginTabset = () => {
     }
     setisloading(true);
     toast.info("Ready to show auth info");
-    // AuthService.register(registerInfo)
-    //   .then((res: { data: any; }) => {
-    //     const info = res.data;
-    //     if (info.user) {
-    //       setUser(info.user);
-    //       setToken(info.bearer);
-    //       setTimeout(()=> {
-    //         window.location.reload()
-    //       }, 2000)
-    //     } else {
-    //       toast.error("Registration failed, check your information");
-    //       setisloading(false);
-    //     }
-    //   })
-    //   .catch((err: { response: { data: { error: any; }; }; }) => {
-    //     if (err.response?.data?.error) {
-    //       toast.error(`Registration failed, ${err.response.data.error}`);
-    //     }
-
-    //     console.log(err);
-    //     setisloading(false);
-    //   });
+    createUserAccount(
+      registerInfo.name,
+      registerInfo.email,
+      registerInfo.password,
+      registerInfo.phoneNumber
+    )
+      .then((result) => {
+        toast.success(
+          "Account created successfully, please check your email for a confirmation!"
+        );
+        setisloading(false);
+        authenticateUser(authInfo.username, authInfo.password);
+      })
+      .catch((err) => {
+        setisloading(false);
+        toast.error("Unable to create account");
+      });
   };
 
   const invokeLogin = async (e: { preventDefault: () => void }) => {
@@ -134,34 +146,7 @@ const LoginTabset = () => {
       return;
     }
     setisloading(true);
-    authenticate(authInfo.username, authInfo.password)
-      .then((authResult) => {
-        setisloading(false);
-        console.log(authResult);
-        if (authResult && authResult.userAttributes) {
-          setAuthContext("0");
-          toast.success("Login successful");
-          navigate("/set-new-password");
-        } else {
-          navigate("/dashboard");
-        }
-        // if (res.data)
-        //   if (res.data.user) {
-        //     setUser(res.data.user);
-        //     setToken(res.data.bearer);
-        //     console.log(process.env.REACT_APP_PUBLIC_URL);
-        //     setTimeout(()=> {window.location.reload()},1500)
-
-        //   } else {
-        //     toast.error("Login failed, check your username or password");
-        //     setisloading(false);
-        //   }
-      })
-      .catch((err: any) => {
-        toast.error("Login failed, check your username or password");
-        console.log(err);
-        setisloading(false);
-      });
+    authenticateUser(authInfo.username, authInfo.password);
   };
 
   const handleRegisterInput = (e: { target: { value: any; name?: any } }) => {
@@ -222,7 +207,6 @@ const LoginTabset = () => {
             <Form className="form-horizontal auth-form" onSubmit={invokeLogin}>
               <FormGroup>
                 <TextField
-
                   required={true}
                   name="username"
                   type="email"
@@ -233,7 +217,7 @@ const LoginTabset = () => {
                   onChange={handleInput}
                 />
               </FormGroup>
-              <br/>
+              <br />
               <FormGroup>
                 <TextField
                   required={true}
@@ -245,7 +229,7 @@ const LoginTabset = () => {
                   onChange={handleInput}
                 />
               </FormGroup>
-              <br/>
+              <br />
               <div className="form-terms">
                 <div className="custom-control custom-checkbox mr-sm-2">
                   <Label className="d-block">
@@ -262,7 +246,7 @@ const LoginTabset = () => {
                   </Label>
                 </div>
               </div>
-              <br/>
+              <br />
               <div className="form-button">
                 <Button
                   color="primary"
@@ -367,20 +351,6 @@ const LoginTabset = () => {
                 </small>
               )}
               <PasswordStrengthBar password={registerInfo.password} />
-              {registerInfo.password.length > 1 && (
-                <small>
-                  Remember: Eight Characters! <br />
-                  At least one of each...
-                  <br />
-                  <ol>
-                    <li style={{ display: "list-item" }}>Upper case letter</li>
-
-                    <li style={{ display: "list-item" }}>Symbol</li>
-
-                    <li style={{ display: "list-item" }}>Number</li>
-                  </ol>
-                </small>
-              )}
               <div className="form-terms">
                 <div className="custom-control custom-checkbox mr-sm-2">
                   <Label className="d-block">
@@ -401,7 +371,12 @@ const LoginTabset = () => {
               </div>
               <div className="form-button">
                 {/** TODO: Bring this back when we're ready to allow user registration... */}
-                <Button className="button-default-w" color="primary" variant="contained" type="submit">
+                <Button
+                  className="button-default-w"
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                >
                   Register
                 </Button>
               </div>

@@ -1,7 +1,6 @@
-import React from "react";
 import Wrapper from "./components/wrapper";
 import Breadcrumb from "./components/breadcrumb";
-import { Card, Paper, Typography } from "@mui/material";
+import { Card,} from "@mui/material";
 import WIP from "./components/wip";
 
 function Account() {
