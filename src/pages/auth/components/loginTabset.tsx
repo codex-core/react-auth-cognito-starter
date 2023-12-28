@@ -24,7 +24,6 @@ import TabContext from "@mui/lab/TabContext";
 import Terms from "./terms";
 import { Form } from "reactstrap";
 import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
-import SignInGoogle from "./signInWithGoogle";
 const LoginTabset = () => {
   const [value, setValue] = React.useState("0");
   const { authenticate, createUserAccount } = useContext(CognitoAuthContext);
@@ -62,7 +61,7 @@ const LoginTabset = () => {
     setOpenTerms(true);
   };
   const authenticateUser = (Username: string, Password: string) => {
-    authenticate(authInfo.username, authInfo.password)
+    authenticate(Username, Password)
       .then((authResult) => {
         setisloading(false);
         console.log(authResult);
@@ -126,7 +125,7 @@ const LoginTabset = () => {
           "Account created successfully, please check your email for a confirmation!"
         );
         setisloading(false);
-        authenticateUser(authInfo.username, authInfo.password);
+        authenticateUser(registerInfo.email, registerInfo.password);
       })
       .catch((err) => {
         setisloading(false);
@@ -258,9 +257,9 @@ const LoginTabset = () => {
                 </Button>
               </div>
               <br />
-              <div>
+              {/* <div>
                 <SignInGoogle />
-              </div>
+              </div> */}
             </Form>
           </TabPanel>
 
@@ -380,6 +379,7 @@ const LoginTabset = () => {
                   Register
                 </Button>
               </div>
+
             </Form>
           </TabPanel>
         </TabContext>

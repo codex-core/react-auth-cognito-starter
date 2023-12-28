@@ -160,7 +160,6 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
           setAuthStep("enterOTP");
         },
         mfaRequired: function (codeDeliveryDetails) {
-          toast.info("MFA required here");
           setAuthStep("mfaRequired");
         },
       });

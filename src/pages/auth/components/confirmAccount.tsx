@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
 import Centered from "../../../common/centered";
 import { useIdleTimer } from "react-idle-timer";
+import { error } from "console";
 
 function ConfirmAccount() {
   const {
@@ -29,14 +30,15 @@ function ConfirmAccount() {
             if (authResult && authResult.userAttributes) {
               // setAuthContext("0");
               toast.success("Login successful");
-              cleanupTempCreds();
               navigate("/set-new-password");
             } else {
               cleanupTempCreds();
               navigate("/dashboard");
             }
           }
-        );
+        ).catch((error) => {
+          console.log(error);
+        });
     }
     getRemainingTime();
   };

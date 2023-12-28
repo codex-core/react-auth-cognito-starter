@@ -3,6 +3,7 @@ import {
   Typography,
   CircularProgress as Spinner,
   Button,
+  Box,
 } from "@mui/material";
 import { useContext, useState } from "react";
 import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
@@ -56,9 +57,12 @@ const MFASetupForm = ({ secretCode = "" }: { secretCode: any }) => {
         onChange={(e) => setMfaCode(e.target.value)}
       />
       <br/>
-      <Button variant="contained" color="primary" onClick={submitOTP}>
-        {isLoading ? <Spinner /> : "Submit"}
-      </Button>
+      <Box pb={2}>
+        <Button variant="contained" color="primary" onClick={submitOTP}>
+          {isLoading ? <Spinner /> : "Submit"}
+        </Button>
+      </Box>
+
       <br/>
     </div>
   );
