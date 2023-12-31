@@ -220,18 +220,6 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
     })
   };
 
-  // const refreshUserSession = () => {
-  //   currentUser?.getSession((err: any, session: CognitoUserSession) => {
-  //     if (err) {
-  //       toast.info("Please login again");
-  //       window.location.href = "/";
-  //       console.log("refreshUserSession error", err);
-  //       return;
-  //     }
-  //     setSessionData("token", session.getAccessToken().getJwtToken());
-  //   }
-  //   );
-  // };
   const checkUserSession = () => {
     currentUser?.getSession((err: any, session: CognitoUserSession) => {
       if (err) {
