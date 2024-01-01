@@ -12,9 +12,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <CognitoAuthProvider>
       <App />
-    </CognitoAuthProvider>
     <ToastContainer
       position="top-right"
       autoClose={5000}

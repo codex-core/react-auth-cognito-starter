@@ -1,3 +1,4 @@
+import { FetchUserAttributesOutput, fetchUserAttributes } from "@aws-amplify/auth";
 import {
   CognitoUserPool,
   AuthenticationDetails,
@@ -28,32 +29,22 @@ export const exchangeCode = async (code: string) => {
     {}, {headers: config.headers}
   );
 };
-export const authenticate = (Email: string, Password: string) => {
-  const userPool = new CognitoUserPool(poolData);
 
-  return new Promise((resolve, reject) => {
-    const user = new CognitoUser({
-      Username: Email,
-      Pool: userPool,
-    });
+export const getUserInfo = async (): Promise<FetchUserAttributesOutput | null> =>
+  {
+    let userInfo: FetchUserAttributesOutput | null = null;
+    try
+    {
+      userInfo = await fetchUserAttributes();
+      console.log(`UserAttr[${JSON.stringify(userInfo)}]`);
+    } catch (error)
+    {
+      console.log("getUserInfo ERROR", error);
+    }
 
-    const authDetails = new AuthenticationDetails({
-      Username: Email,
-      Password,
-    });
+    return userInfo;
+  };
 
-    user.authenticateUser(authDetails, {
-      onSuccess: (result: unknown) => {
-        console.log("login successful");
-        resolve(result);
-      },
-      onFailure: (err: any) => {
-        console.log("login failed", err);
-        reject(err);
-      },
-    });
-  });
-};
 
 export const logout = () => {
   const userPool = new CognitoUserPool(poolData);

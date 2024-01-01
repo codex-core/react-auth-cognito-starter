@@ -23,6 +23,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { House } from "@mui/icons-material";
 import { LogOut, Settings, User } from "react-feather";
 import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -160,6 +161,7 @@ export default function Wrapper(props:any) {
                 { name: "Home", icon: <House />, link: '/dashboard' },
               ].map(({name, icon, link}, index) => (
                 <ListItem key={name} disablePadding sx={{ display: "block" }}>
+                <Link to={link} style={{textDecoration: 'none', color: 'black'}}>
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -182,6 +184,7 @@ export default function Wrapper(props:any) {
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
+                  </Link>
                 </ListItem>
               ))}
             </List>
@@ -190,13 +193,13 @@ export default function Wrapper(props:any) {
               {[{ name: "My Account", icon: <User />, link: '/account' },
                 { name: "Settings", icon: <Settings />, link: '/settings' }].map(({name, icon, link}, index) => (
                 <ListItem key={name} disablePadding sx={{ display: "block" }}>
+                  <Link to={link} style={{textDecoration: 'none', color: 'black'}}>
                   <ListItemButton
                     sx={{
                       minHeight: 48,
                       justifyContent: open ? "initial" : "center",
                       px: 2.5,
                     }}
-                    href={link}
                   >
                     <ListItemIcon
                       sx={{
@@ -212,6 +215,7 @@ export default function Wrapper(props:any) {
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
+                  </Link>
                 </ListItem>
               ))}
             </List>

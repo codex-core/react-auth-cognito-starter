@@ -24,6 +24,7 @@ import TabContext from "@mui/lab/TabContext";
 import Terms from "./terms";
 import { Form } from "reactstrap";
 import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
+import LoginWithSSO from "./ssoLogin";
 const LoginTabset = () => {
   const [value, setValue] = React.useState("0");
   const { authenticate, createUserAccount } = useContext(CognitoAuthContext);
@@ -257,9 +258,9 @@ const LoginTabset = () => {
                 </Button>
               </div>
               <br />
-              {/* <div>
-                <SignInGoogle />
-              </div> */}
+              <div>
+                <LoginWithSSO />
+              </div>
             </Form>
           </TabPanel>
 

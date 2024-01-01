@@ -10,6 +10,12 @@ import useSessionStorage from "../hooks/useSessionStorage";
 import useAutoLogout from "../hooks/useAutoLogout";
 import { toast } from "react-toastify";
 import { TOTP } from "otpauth";
+import { signOut } from "@aws-amplify/auth";
+import { Hub } from "@aws-amplify/core";
+import { getUserInfo } from "../../pages/auth/cognito";
+import { useNavigate } from "react-router-dom";
+import { setAuthContext } from "../../services/store";
+const IS_LOCAL = process.env.NODE_ENV === "development";
 const poolData = {
   UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID ?? "",
   ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID ?? "",
@@ -45,10 +51,12 @@ interface AuthContextProps {
   checkUserSession: any;
   cleanupTempCreds: any;
   displayQRCode?: boolean;
-  createUserAccount? :any;
+  createUserAccount?: any;
   tempAccountCreds: any;
   sessionToken: any;
   requiredAttributes: string[];
+  storeUserData?: any;
+  fetchUserData?: any;
 }
 
 const CognitoAuthContext = createContext<AuthContextProps>({
@@ -78,6 +86,7 @@ const CognitoAuthContext = createContext<AuthContextProps>({
 export const CognitoAuthProvider = ({ children }: { children: any }) => {
   //TODO: Replace with user type
   const [currentUser, setCurrentUser] = useState<CognitoUser | null>(null);
+  const [userData, setUserData] = useState<any>(null);
   const [sessionToken, setSessionData, removeSessionData] = useSessionStorage(
     "token",
     null
@@ -88,14 +97,20 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
   const [authStep, setAuthStep] = useState<mfaSessionOptions>("login"); // login, mfa, forgotPassword, newPasswordRequired, mfaSetup
   const [displayQRCode, setDisplayQRCode] = useState<boolean>(false);
   const [requiredAttributes, setRequiredAttributes] = useState<any>(null);
-
-  var logout = () => {
+  const navigate = useNavigate();
+  var logout = async () => {
     if (currentUser) {
       currentUser.signOut();
+      setCurrentUser(null);
+      //reset auth context
     }
+    console.log("LOGOUT");
+    await signOut();
+    setAuthStep("login");
     removeSessionData("token");
-    setCurrentUser(null);
-    window.location.href = "/";
+    navigate('/')
+    // window.location.href = '/'
+
   };
   useAutoLogout(logout);
 
@@ -104,7 +119,6 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
       const user = new CognitoUser({ Username, Pool: userPool });
       const authDetails = new AuthenticationDetails({ Username, Password });
       user.authenticateUser(authDetails, {
-
         onSuccess: (result) => {
           setCurrentUser(user);
           setSessionData("token", result.getAccessToken().getJwtToken());
@@ -112,18 +126,15 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
         },
         onFailure: (err) => {
           console.log("login failed", err);
-            if(err.code && err.code === "UserNotConfirmedException") {
-              setAuthStep("confirmAccount");
-              setCurrentUser(user);
-              setTempAccountCreds({username: Username, password: Password});
-            } else {
-              reject("Unable to login")
-              setCurrentUser(null);
-            }
-
-
-        }
-          ,
+          if (err.code && err.code === "UserNotConfirmedException") {
+            setAuthStep("confirmAccount");
+            setCurrentUser(user);
+            setTempAccountCreds({ username: Username, password: Password });
+          } else {
+            reject("Unable to login");
+            setCurrentUser(null);
+          }
+        },
         newPasswordRequired: (userAttributes, requiredAttributes) => {
           // User was signed in, but must set a new password
           setCurrentUser(user);
@@ -177,13 +188,16 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
         resolve(result);
       });
     });
-  }
+  };
   const cleanupTempCreds = () => {
     setTempAccountCreds(null);
-  }
+  };
   const resendCode = () => {
     return new Promise((resolve, reject) => {
-      const user = new CognitoUser({ Username: tempAccountCreds.username, Pool: userPool });
+      const user = new CognitoUser({
+        Username: tempAccountCreds.username,
+        Pool: userPool,
+      });
       user.resendConfirmationCode((err, result) => {
         if (err) {
           reject(err);
@@ -192,7 +206,7 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
         resolve(result);
       });
     });
-  }
+  };
 
   const createUserAccount = (
     name: string,
@@ -212,12 +226,12 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
           return;
         }
         const cognitoUser = result.user;
-        console.log('User registration successful:', cognitoUser.getUsername());
+        console.log("User registration successful:", cognitoUser.getUsername());
         setAuthStep("confirmAccount");
         setCurrentUser(cognitoUser);
         resolve(result);
       });
-    })
+    });
   };
 
   const checkUserSession = () => {
@@ -279,6 +293,17 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
   const updateSession = (token: string) => {
     setSessionData("token", token);
   };
+
+  const fetchUserData = () => {
+    if (userData) {
+      return userData;
+    }
+    const sessionData = sessionStorage.getItem("userData")
+    if (sessionData) {
+      return JSON.parse(sessionData)
+    }
+    return null;
+  };
   // Add other Cognito methods (e.g., password reset) as needed
 
   return (
@@ -300,6 +325,16 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
         currentUser,
         createUserAccount,
         setCurrentUser,
+        storeUserData: (data) => {
+          if (data === null || data === undefined) {
+            sessionStorage.removeItem("userData");
+            setUserData(null);
+            return
+          }
+          sessionStorage.setItem("userData", JSON.stringify(data));
+          setUserData(data);
+        },
+        fetchUserData,
         forgotPassword,
         confirmAccount,
         resendCode,
