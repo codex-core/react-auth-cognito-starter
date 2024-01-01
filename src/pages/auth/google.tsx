@@ -1,9 +1,7 @@
-import React, { useContext, useEffect } from "react";
-import CognitoAuthContext from "../../common/context/cognitoAuthContext";
+import { useEffect } from "react";
 import { exchangeCode } from "./cognito";
 
 function GoogleValidation() {
-    const { currentUser: user, sessionToken: token } = useContext(CognitoAuthContext);
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");

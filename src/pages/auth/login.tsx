@@ -1,7 +1,7 @@
 import React, { Fragment, useContext } from "react";
 import LoginTabset from "./components/loginTabset";
 // import stats from "public/images/swank-vendors-white.png";
-import { Box, Card, Paper, Typography, Zoom } from "@mui/material";
+import { Box, Card, Typography, Zoom } from "@mui/material";
 import Centered from "../../common/centered";
 import Row from "../../common/components/Row";
 import Col from "../../common/components/Col";

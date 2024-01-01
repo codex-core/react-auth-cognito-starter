@@ -25,7 +25,7 @@ function Terms({
   return (
     <Fragment>
       <span onClick={openIt}>
-        <a href="#">Terms &amp; Conditions</a>
+        <strong>Terms &amp; Conditions</strong>
       </span>
       <Dialog fullWidth open={isopen} onClose={closeIt}>
         <DialogTitle>Terms of Service</DialogTitle>

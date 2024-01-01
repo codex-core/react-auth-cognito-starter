@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import CognitoAuthContext from "../../../common/context/cognitoAuthContext";
 import Centered from "../../../common/centered";
 import { useIdleTimer } from "react-idle-timer";
-import { error } from "console";
 
 function ConfirmAccount() {
   const {

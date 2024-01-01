@@ -15,7 +15,8 @@ const SetNewPassword = () => {
     }
     return () => {
     }
-  }, [currentUser])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
   const updateRequiredAttr = (event: any) => {
     console.log(event.target.value)
     setUndefinedAttributes({
