@@ -99,6 +99,14 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
   };
   useAutoLogout(logout);
 
+  /**
+   *
+   * @param Username
+   * @param Password
+   * @returns
+   * This function will authenticate the user and set the session token in local storage when the
+   * normal username and password authentication flow is used.
+   */
   const authenticate = (Username: string, Password: string) => {
     return new Promise((resolve, reject) => {
       const user = new CognitoUser({ Username, Pool: userPool });
@@ -165,6 +173,15 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
       });
     });
   };
+
+  /**
+   *
+   * @param Username
+   * @param code
+   * @returns
+   * This function will confirm the account when the user is created and the account is not confirmed.
+   * meaning they hit the second part of the login flow where they have to enter a OTP code
+   */
   const confirmAccount = (Username: string, code: string) => {
     return new Promise((resolve, reject) => {
       const user = new CognitoUser({ Username, Pool: userPool });
@@ -181,6 +198,13 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
   const cleanupTempCreds = () => {
     setTempAccountCreds(null);
   }
+
+  /**
+   *
+   * @returns
+   * This function will resend the confirmation code to the user if they did not receive it.
+   * Mainly used in the password reset flow
+   */
   const resendCode = () => {
     return new Promise((resolve, reject) => {
       const user = new CognitoUser({ Username: tempAccountCreds.username, Pool: userPool });
@@ -194,11 +218,19 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
     });
   }
 
+  /**
+   *
+   * @param name
+   * @param email
+   * @param password
+   * @returns
+   * This function will create the user account in cognito and send the confirmation code to the user's
+   * email
+   */
   const createUserAccount = (
     name: string,
     email: string,
     password: string,
-    phone: string
   ) => {
     const attributeList = [
       new CognitoUserAttribute({ Name: "name", Value: name }),
@@ -219,7 +251,10 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
       });
     })
   };
-
+  /**
+   * This function will check the user session and refresh the token if it is expired.
+   * and set the token in local storage
+   */
   const checkUserSession = () => {
     currentUser?.getSession((err: any, session: CognitoUserSession) => {
       if (err) {
@@ -261,6 +296,14 @@ export const CognitoAuthProvider = ({ children }: { children: any }) => {
     });
   };
 
+  /**
+   *
+   * @param Username
+   * @param verificationCode
+   * @param newPassword
+   * @returns
+   * This function will confirm the new password for the user when they are resetting their password
+   */
   const confirmPassword = (
     Username: any,
     verificationCode: string,
