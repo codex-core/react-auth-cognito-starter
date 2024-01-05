@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import "./App.css";
 import Login from "./pages/auth/login";
 import CognitoAuthContext from "./common/context/cognitoAuthContext";
 import {
